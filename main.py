@@ -17,13 +17,12 @@ async def root():
 
 @app.get("/ping")
 async def root(request: Request):
-    print('PING')
-    useragent = str(request._headers.get('user-agent'))
+    useragent = str(request._headers.get('user-agent')).split('(')[1].split(')')[0]
     timestamp = int(time.time())
     pingdata = {'agent': useragent, 'timestamp': timestamp}
     pid = pingdb.insert(pingdata)
     return {'idnumber': pid, 'ping': pingdata}
 
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int, q: Optional[str] = None):
-#     return {"item_id": item_id, "q": q}
+@app.get("/pinglist")
+async def root():
+    return pingdb.all()
